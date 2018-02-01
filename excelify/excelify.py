@@ -10,7 +10,7 @@ from pandas.core.frame import DataFrame
 from pandas.core.series import Series
 from pandas import ExcelWriter
 
-from IPython.core.magic import register_line_magic, needs_local_scope
+from IPython.core.magic import needs_local_scope
 from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
 
 
@@ -23,13 +23,15 @@ from IPython.core.magic_arguments import (argument, magic_arguments, parse_argst
     '--sheetname',
     type=str,
     help=u'Sheet name to output data. Default: \{object\}_{timestamp}')
-@register_line_magic
 @needs_local_scope
 def excel(string, local_ns=None):
     '''Saves a DataFrame or Series to Excel'''
     args = parse_argstring(excel, string)
 
-    dataframe = local_ns[args.dataframe]
+    try:
+        dataframe = local_ns[args.dataframe]
+    except KeyError:
+        raise NameError("name '{}' is not defined".format(args.dataframe))
 
     if not (isinstance(dataframe, DataFrame) or isinstance(dataframe, Series)):
         raise TypeError("Object must be pandas Series or DataFrame. Object passed is: {}".format(
@@ -55,12 +57,11 @@ def excel(string, local_ns=None):
     print("{dataframe} saved to {filepath} on sheet {sheetname}".format(
         dataframe=args.dataframe, filepath=filepath, sheetname=sheetname))
 
+
 @magic_arguments()
 @argument(
     '-f', '--filepath', help=u'Filepath to excel spreadsheet. Default: \{object\}_{timestamp}')
-@argument(
-    '-n', '--nosort', help=u'Turns off alphabetical sorting of objects for export to sheets')
-@register_line_magic
+@argument('-n', '--nosort', help=u'Turns off alphabetical sorting of objects for export to sheets')
 @needs_local_scope
 def excel_all(string, local_ns=None):
     '''Saves all Series or DataFrame objects in the namespace to Excel.
@@ -71,6 +72,12 @@ def excel_all(string, local_ns=None):
     pandas_object = lambda d: isinstance(d, DataFrame) or isinstance(d, Series)
 
     pandas_objects = [(name, obj) for (name, obj) in local_ns.items() if pandas_object(obj)]
+
+    if len(pandas_objects) == 0:
+        raise RuntimeError("No pandas objects in local namespace.")
+    if len(pandas_objects) > 100:
+        raise RuntimeError("Over 100 pandas objects in local namespace.")
+
     pandas_objects = sorted(pandas_objects, key=lambda x: x[0])
 
     if not args.filepath:
@@ -87,10 +94,9 @@ def excel_all(string, local_ns=None):
 
     n_objects = len(pandas_objects)
 
-    print("{n_objects} saved to {filepath}".format(
-        n_objects=n_objects, filepath=filepath))
+    print("{n_objects} saved to {filepath}".format(n_objects=n_objects, filepath=filepath))
 
 
 def load_ipython_extension(ipython):
-    ipython.register_magics(excel)
-    ipython.register_magics(excel_all)
+    ipython.register_magic_function(excel)
+    ipython.register_magic_function(excel_all)
