@@ -16,13 +16,9 @@ from IPython.core.magic_arguments import (argument, magic_arguments, parse_argst
 
 @magic_arguments()
 @argument('dataframe', help='Dataframe to Save')
+@argument('-f', '--filepath', help=u'Filepath to Excel spreadsheet. Default: {object}_{timestamp}')
 @argument(
-    '-f', '--filepath', help=u'Filepath to Excel spreadsheet. Default: \{object\}_{timestamp}')
-@argument(
-    '-s',
-    '--sheetname',
-    type=str,
-    help=u'Sheet name to output data. Default: \{object\}_{timestamp}')
+    '-s', '--sheetname', type=str, help=u'Sheet name to output data. Default: {object}_{timestamp}')
 @needs_local_scope
 def excel(string, local_ns=None):
     '''Saves a DataFrame or Series to Excel'''
@@ -59,13 +55,14 @@ def excel(string, local_ns=None):
 
 
 @magic_arguments()
-@argument(
-    '-f', '--filepath', help=u'Filepath to excel spreadsheet. Default: \{object\}_{timestamp}')
+@argument('-f', '--filepath', help=u'Filepath to excel spreadsheet. Default: {object}_{timestamp}')
 @argument('-n', '--nosort', help=u'Turns off alphabetical sorting of objects for export to sheets')
 @needs_local_scope
 def excel_all(string, local_ns=None):
-    '''Saves all Series or DataFrame objects in the namespace to Excel.
-    Use at your own peril'''
+    '''
+    Saves all Series or DataFrame objects in the namespace to Excel.
+    Use at your own peril. Will not allow more than 100 objects.
+    '''
 
     args = parse_argstring(excel_all, string)
 
