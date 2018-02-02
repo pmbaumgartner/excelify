@@ -16,7 +16,7 @@ from IPython.core.magic_arguments import (argument, magic_arguments, parse_argst
 
 @magic_arguments()
 @argument('dataframe', help='Dataframe to Save')
-@argument('-f', '--filepath', help=u'Filepath to Excel spreadsheet. Default: {object}_{timestamp}')
+@argument('-f', '--filepath', help=u'Filepath to Excel spreadsheet. Default: {object}_{timestamp}.xlsx')
 @argument(
     '-s', '--sheetname', type=str, help=u'Sheet name to output data. Default: {object}_{timestamp}')
 @needs_local_scope
@@ -55,7 +55,7 @@ def excel(string, local_ns=None):
 
 
 @magic_arguments()
-@argument('-f', '--filepath', help=u'Filepath to excel spreadsheet. Default: {object}_{timestamp}')
+@argument('-f', '--filepath', help=u'Filepath to excel spreadsheet. Default: all_data_{timestamp}.xlsx')
 @argument('-n', '--nosort', help=u'Turns off alphabetical sorting of objects for export to sheets')
 @needs_local_scope
 def excel_all(string, local_ns=None):
