@@ -17,8 +17,8 @@ install:
     - conda config --set always_yes yes --set changeps1 no
     - conda update -q conda
     - conda info -a
-    - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION ipython pandas xlrd
+    - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION ipython pandas xlrd XlsxWriter
     - source activate test-environment
     - python setup.py install
 script:
-    - python -m unittest
+    - python -m unittest discover

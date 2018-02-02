@@ -13,5 +13,5 @@ setup(
     author_email='petermbaumgartner@gmail.com',
     url='https://github.com/pbaumgartner/excelify',
     packages=find_packages(exclude=[]),
-    install_requires=['ipython', 'pandas', 'xlrd'],
+    install_requires=['ipython', 'pandas', 'XlsxWriter', 'xlrd'],
 )
