@@ -49,8 +49,6 @@ class TestMagic(unittest.TestCase):
             elif isinstance(obj, DataFrame):
                 loaded_data = read_excel(excel_name, sheet_name=name, dtype=obj.dtypes)
                 tm.assert_frame_equal(obj, loaded_data, check_names=False)
-            else:
-                raise TypeError("Objects not pandas types.")
 
 
     
