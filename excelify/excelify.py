@@ -66,9 +66,7 @@ def excel_all(string, local_ns=None):
 
     args = parse_argstring(excel_all, string)
 
-    pandas_object = lambda d: isinstance(d, DataFrame) or isinstance(d, Series)
-
-    pandas_objects = [(name, obj) for (name, obj) in local_ns.items() if pandas_object(obj)]
+    pandas_objects = [(name, obj) for (name, obj) in local_ns.items() if isinstance(obj, (DataFrame, Series))]
 
     if len(pandas_objects) == 0:
         raise RuntimeError("No pandas objects in local namespace.")
@@ -81,7 +79,7 @@ def excel_all(string, local_ns=None):
         filepath = "all_data_" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + '.xlsx'
     else:
         filepath = args.filepath
-        if filepath[-4:] != '.xlsx':
+        if filepath[-5:] != '.xlsx':
             filepath += '.xlsx'
 
     writer = ExcelWriter(filepath, engine='xlsxwriter')
@@ -91,7 +89,7 @@ def excel_all(string, local_ns=None):
 
     n_objects = len(pandas_objects)
 
-    print("{n_objects} saved to {filepath}".format(n_objects=n_objects, filepath=filepath))
+    print("{n_objects} objects saved to {filepath}".format(n_objects=n_objects, filepath=filepath))
 
 
 def load_ipython_extension(ipython):
