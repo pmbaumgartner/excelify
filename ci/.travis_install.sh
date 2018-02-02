@@ -15,9 +15,8 @@ conda config --set always_yes yes --set changeps1 no
 conda update -q conda
 conda info -a
 
-conda create -n testenv python=$TRAVIS_PYTHON_VERSION ipython;
+conda create -n testenv python=$TRAVIS_PYTHON_VERSION ipython pandas;
 source activate testenv;
-conda install pandas;
 
 python --version;
 python -c 'import IPython';
