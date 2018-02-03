@@ -8,13 +8,14 @@ from pandas.core.frame import DataFrame
 from pandas.core.series import Series
 from pandas import read_excel
 
+
 class TestMagic(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
         cls.ip = get_ipython()
         cls.ip.magic('load_ext excelify')
-    
+
     def setUp(self):
         self.tempexcel = tempfile.NamedTemporaryFile(suffix='.xlsx')
 
@@ -50,10 +51,9 @@ class TestMagic(unittest.TestCase):
                 loaded_data = read_excel(excel_name, sheet_name=name, dtype=obj.dtypes)
                 tm.assert_frame_equal(obj, loaded_data, check_names=False)
 
-
-    
     def tearDown(self):
         self.tempexcel.close()
+
 
 if __name__ == '__main__':
     unittest.main()
