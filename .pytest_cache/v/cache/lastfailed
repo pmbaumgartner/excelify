@@ -1,0 +1,6 @@
+{
+  "excelify/tests.py::TestMagicExportImport::test_no_objects": true,
+  "excelify/tests.py::TestMagicExportImport::test_non_pandas_object": true,
+  "excelify/tests.py::TestMagicExportImport::test_too_many_objects": true,
+  "excelify/tests.py::test_series_standalone": true
+}

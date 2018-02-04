@@ -15,10 +15,18 @@ from IPython.core.magic_arguments import (argument, magic_arguments, parse_argst
 
 
 @magic_arguments()
-@argument('dataframe', help='Dataframe to Save')
-@argument('-f', '--filepath', help=u'Filepath to Excel spreadsheet. Default: {object}_{timestamp}.xlsx')
+@argument('dataframe', help='DataFrame or Series to Save')
 @argument(
-    '-s', '--sheetname', type=str, help=u'Sheet name to output data. Default: {object}_{timestamp}')
+    '-f',
+    '--filepath',
+    help='Filepath to Excel spreadsheet.'
+    "Default: './{object}_{timestamp}.xlsx'")
+@argument(
+    '-s',
+    '--sheetname',
+    type=str,
+    help='Sheet name to output data.'
+    'Default: {object}_{timestamp}')
 @needs_local_scope
 def excel(string, local_ns=None):
     '''Saves a DataFrame or Series to Excel'''
@@ -30,15 +38,15 @@ def excel(string, local_ns=None):
         raise NameError("name '{}' is not defined".format(args.dataframe))
 
     if not (isinstance(dataframe, DataFrame) or isinstance(dataframe, Series)):
-        raise TypeError("Object must be pandas Series or DataFrame. Object passed is: {}".format(
-            type(dataframe)))
+        raise TypeError("Object must be pandas Series or DataFrame."
+                        "Object passed is: {}".format(type(dataframe)))
 
     if not args.filepath:
         filepath = args.dataframe + "_" + datetime.datetime.now().strftime(
             "%Y%m%d-%H%M%S") + '.xlsx'
     else:
         filepath = args.filepath
-        if filepath.find('.xlsx') == -1:
+        if filepath[-5:] != '.xlsx':
             filepath += '.xlsx'
 
     if not args.sheetname:
@@ -50,12 +58,16 @@ def excel(string, local_ns=None):
     dataframe.to_excel(writer, sheet_name=sheetname)
     writer.save()
 
-    print("{dataframe} saved to {filepath} on sheet {sheetname}".format(
+    print("'{dataframe}' saved to '{filepath}' on sheet '{sheetname}'".format(
         dataframe=args.dataframe, filepath=filepath, sheetname=sheetname))
 
 
 @magic_arguments()
-@argument('-f', '--filepath', help=u'Filepath to excel spreadsheet. Default: all_data_{timestamp}.xlsx')
+@argument(
+    '-f',
+    '--filepath',
+    help=u'Filepath to excel spreadsheet.'
+    "Default: './all_data_{timestamp}.xlsx'")
 @argument('-n', '--nosort', help=u'Turns off alphabetical sorting of objects for export to sheets')
 @needs_local_scope
 def excel_all(string, local_ns=None):
@@ -66,7 +78,8 @@ def excel_all(string, local_ns=None):
 
     args = parse_argstring(excel_all, string)
 
-    pandas_objects = [(name, obj) for (name, obj) in local_ns.items() if isinstance(obj, (DataFrame, Series))]
+    pandas_objects = [(name, obj) for (name, obj) in local_ns.items()
+                      if isinstance(obj, (DataFrame, Series))]
 
     if len(pandas_objects) == 0:
         raise RuntimeError("No pandas objects in local namespace.")
@@ -89,7 +102,8 @@ def excel_all(string, local_ns=None):
 
     n_objects = len(pandas_objects)
 
-    print("{n_objects} objects saved to {filepath}".format(n_objects=n_objects, filepath=filepath))
+    print("{n_objects} objects saved to '{filepath}'".format(
+        n_objects=n_objects, filepath=filepath))
 
 
 def load_ipython_extension(ipython):
