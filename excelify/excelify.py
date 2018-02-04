@@ -104,7 +104,7 @@ def excel_all(string, local_ns=None):
                 truncated_objects.append((name, name[:31]))
             pandas_objects_truncated.append((name[:31], obj))
         pandas_objects = pandas_objects_truncated
-        warnings.warn('{} had their names truncated to fit sheet name length'.format(
+        warnings.warn('{} objects had their names truncated to fit sheet name length'.format(
             len(truncated_objects)))
 
     if len(pandas_objects) == 0:
