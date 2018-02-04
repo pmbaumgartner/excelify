@@ -23,8 +23,9 @@ class TestMagicExportImport(unittest.TestCase):
 
     def test_series(self):
         series = Series()
-        self.ip.push({'series': Series()})
+        self.ip.push({'series': series})
         excel_name = self.tempexcel.name
+        print(self.ip.user_ns)
         self.ip.run_line_magic('excel', 'series -f {filepath}'.format(filepath=excel_name))
         series = self.ip.user_ns['series']
         loaded_series = read_excel(excel_name, squeeze=True, dtype=series.dtype)
