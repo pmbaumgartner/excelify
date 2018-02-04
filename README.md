@@ -4,6 +4,19 @@ Easily export `pandas` objects to Excel spreadsheets with IPython magic.
 
 [![Build Status](https://travis-ci.org/pmbaumgartner/excelify.svg?branch=master)](https://travis-ci.org/pmbaumgartner/excelify) [![codecov](https://codecov.io/gh/pmbaumgartner/excelify/branch/master/graph/badge.svg)](https://codecov.io/gh/pmbaumgartner/excelify)
 
+## Install
+
+`pip install excelify`
+
+or
+
+`pip install https://github.com/pmbaumgartner/excelify/releases/download/v0.4/excelify-0.4.tar.gz`
+
+then:
+
+`%load_ext excelify`
+
+
 ## Example
 
 ### `%excel`
