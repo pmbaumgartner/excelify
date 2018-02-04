@@ -2,6 +2,8 @@
 
 Easily export `pandas` objects to Excel spreadsheets with IPython magic.
 
+[![Build Status](https://travis-ci.org/pmbaumgartner/excelify.svg?branch=master)](https://travis-ci.org/pmbaumgartner/excelify) [![codecov](https://codecov.io/gh/pmbaumgartner/excelify/branch/master/graph/badge.svg)](https://codecov.io/gh/pmbaumgartner/excelify)
+
 ## Example
 
 ### `%excel`
@@ -27,14 +29,14 @@ df = pd.DataFrame(data)
 Saves a DataFrame or Series to Excel
 
 positional arguments:
-  dataframe             Dataframe to Save
+  dataframe             DataFrame or Series to Save
 
 optional arguments:
   -f FILEPATH, --filepath FILEPATH
-                        Filepath to Excel spreadsheet. Default:
-                        {object}_{timestamp}.xlsx
+                        Filepath to Excel spreadsheet.Default:
+                        './{object}_{timestamp}.xlsx'
   -s SHEETNAME, --sheetname SHEETNAME
-                        Sheet name to output data. Default:
+                        Sheet name to output data.Default:
                         {object}_{timestamp}
 
 ```
@@ -49,8 +51,8 @@ Use at your own peril. Will not allow more than 100 objects.
 
 optional arguments:
   -f FILEPATH, --filepath FILEPATH
-                        Filepath to excel spreadsheet. Default:
-                        {object}_{timestamp}
+                        Filepath to excel spreadsheet.Default:
+                        './all_data_{timestamp}.xlsx'
   -n NOSORT, --nosort NOSORT
                         Turns off alphabetical sorting of objects for export
                         to sheets
