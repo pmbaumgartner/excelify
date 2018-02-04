@@ -34,6 +34,14 @@ class TestMagicExportImport(unittest.TestCase):
         loaded_df = read_excel(excel_name, dtype=df.dtypes)
         tm.assert_frame_equal(df, loaded_df, check_names=False)
 
+    def test_sheet_name(self):
+        series = Series()
+        excel_name = self.tempexcel.name
+        sheetname = 'test_sheet_name'
+        ip.run_line_magic('excel', 'series -f {filepath} -s {sheetname}'.format(filepath=excel_name, sheetname=sheetname))
+        loaded_excel = read_excel(excel_name, sheet_name=None)
+        assert 'test_sheet_name' in loaded_excel
+
     def test_all_pandas_objects(self):
         df1 = DataFrame()
         df2 = DataFrame()
@@ -50,7 +58,7 @@ class TestMagicExportImport(unittest.TestCase):
             elif isinstance(obj, DataFrame):
                 loaded_data = read_excel(excel_name, sheet_name=name, dtype=obj.dtypes)
                 tm.assert_frame_equal(obj, loaded_data, check_names=False)
-    
+
     def test_sheet_timestamp(self):
         series = Series()
         excel_name = self.tempexcel.name
@@ -66,6 +74,23 @@ class TestMagicExportImport(unittest.TestCase):
 
     def tearDown(self):
         self.tempexcel.close()
+
+
+def test_filename():
+    series = Series()
+    ip.run_line_magic('excel', 'series')
+    excel_name = list(pathlib.Path().glob('series_*.xlsx'))[0]
+    assert excel_name.exists()
+    excel_name.unlink()
+
+def test_all_filename():
+    series = Series()
+    df = DataFrame()
+    ip.run_line_magic('excel_all', '')
+    excel_name = list(pathlib.Path().glob('all_data_*.xlsx'))[0]
+    assert excel_name.exists()
+    excel_name.unlink()
+
 
 @pytest.fixture
 def no_extension_file():
@@ -107,7 +132,7 @@ def test_all_no_objects():
         ip.run_line_magic('excel_all', '')
 
 def test_all_too_many_objects():
-    objects = [Series() for _ in range(100)]
+    objects = [Series() for _ in range(102)]
     with pytest.raises(RuntimeError):
         ip.run_line_magic('excel_all', '')
 
