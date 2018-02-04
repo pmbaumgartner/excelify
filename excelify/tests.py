@@ -23,18 +23,14 @@ class TestMagicExportImport(unittest.TestCase):
 
     def test_series(self):
         series = Series()
-        self.ip.push({'series': series})
         excel_name = self.tempexcel.name
-        print(self.ip.user_ns)
         self.ip.run_line_magic('excel', 'series -f {filepath}'.format(filepath=excel_name))
-        series = self.ip.user_ns['series']
         loaded_series = read_excel(excel_name, squeeze=True, dtype=series.dtype)
         tm.assert_series_equal(series, loaded_series, check_names=False)
 
     def test_dataframe(self):
         df = DataFrame()
         excel_name = self.tempexcel.name
-        print(excel_name)
         self.ip.run_line_magic('excel', 'df -f {filepath}'.format(filepath=excel_name))
         loaded_df = read_excel(excel_name, dtype=df.dtypes)
         tm.assert_frame_equal(df, loaded_df, check_names=False)
