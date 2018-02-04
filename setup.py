@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import os
 import excelify
 
-VERSION = excelify.__version__
+VERSION = 0.3
 
 setup(
     name='excelify',
@@ -14,4 +14,5 @@ setup(
     url='https://github.com/pbaumgartner/excelify',
     packages=find_packages(exclude=[]),
     install_requires=['ipython', 'pandas', 'XlsxWriter', 'xlrd'],
+    include_package_data=True
 )

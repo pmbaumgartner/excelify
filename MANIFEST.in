@@ -1,0 +1,10 @@
+include *.rst
+include *.py
+include tox.ini
+include Makefile
+include .gitignore
+include .travis.yml
+include appveyor.yml
+include .coveragerc
+include LICENSE
+include *.md
