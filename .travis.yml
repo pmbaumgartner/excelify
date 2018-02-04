@@ -13,11 +13,11 @@ install:
     - conda config --set always_yes yes --set changeps1 no
     - conda update -q conda
     - conda info -a
-    - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION ipython pandas xlrd XlsxWriter pytest
+    - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION ipython pandas xlrd XlsxWriter pytest pytest-cov
     - source activate test-environment
     - conda install -c conda-forge codecov
     - python setup.py install
 script:
-    - pytest excelify/tests.py
+    - pytest excelify/tests.py --cov=./
 after_success:
     - codecov
