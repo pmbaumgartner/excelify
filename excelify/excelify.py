@@ -5,6 +5,7 @@ IPython magic function to save pandas objects to excel
 from time import strftime
 from time import time
 import datetime
+import warnings
 
 from pandas.core.frame import DataFrame
 from pandas.core.series import Series
@@ -50,9 +51,21 @@ def excel(string, local_ns=None):
             filepath += '.xlsx'
 
     if not args.sheetname:
-        sheetname = args.dataframe + "_" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        if len(args.dataframe) > 15:
+            object_name = args.dataframe[:15]
+            warnings.warn('{} was truncated to {} to fit sheet name length limit'.format(
+                args.dataframe, object_name))
+        else:
+            object_name = args.dataframe
+        sheetname = object_name + "_" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     else:
-        sheetname = args.sheetname
+        if len(args.sheetname) > 31:
+            object_name = args.sheetname[:31]
+            warnings.warn('Sheet Name {} was truncated to {} to fit sheet name length limit'.format(
+                args.dataframe, object_name))
+        else:
+            object_name = args.sheetname
+        sheetname = object_name
 
     writer = ExcelWriter(filepath, engine='xlsxwriter')
     dataframe.to_excel(writer, sheet_name=sheetname)
@@ -80,6 +93,19 @@ def excel_all(string, local_ns=None):
 
     pandas_objects = [(name, obj) for (name, obj) in local_ns.items()
                       if isinstance(obj, (DataFrame, Series))]
+
+    check_names = any((len(name) > 31 for (name, obj) in pandas_objects))
+
+    if check_names:
+        pandas_objects_truncated = []
+        truncated_objects = []
+        for (name, obj) in pandas_objects:
+            if len(name) > 31:
+                truncated_objects.append((name, name[:31]))
+            pandas_objects_truncated.append((name[:31], obj))
+        pandas_objects = pandas_objects_truncated
+        warnings.warn('{} had their names truncated to fit sheet name length'.format(
+            len(truncated_objects)))
 
     if len(pandas_objects) == 0:
         raise RuntimeError("No pandas objects in local namespace.")

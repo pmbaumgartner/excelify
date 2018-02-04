@@ -2,6 +2,7 @@ import unittest
 import tempfile
 import pathlib
 import datetime
+import warnings
 
 from IPython.testing.globalipapp import start_ipython, get_ipython
 
@@ -72,6 +73,37 @@ class TestMagicExportImport(unittest.TestCase):
             # there is probably a better way to test this
             assert load_to_read.seconds < 10
 
+    def test_all_long_name(self):
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            locals().update({'a' * 33 : Series()})
+            excel_name = self.tempexcel.name
+            ip.run_line_magic('excel_all', '-f {filepath}'.format(filepath=excel_name))
+            assert len(w) == 1
+            assert issubclass(w[-1].category, UserWarning)
+            assert "truncated" in str(w[-1].message)
+
+    def test_long_name_provided(self):
+        with warnings.catch_warnings(record=True) as w:
+            series = Series()
+            excel_name = self.tempexcel.name
+            longsheet = 'a' * 33
+            ip.run_line_magic('excel', 'series -f {filepath} -s {longsheet}'.format(filepath=excel_name, longsheet=longsheet))
+            assert len(w) == 1
+            assert issubclass(w[-1].category, UserWarning)
+            assert "truncated" in str(w[-1].message)
+
+    def test_long_name_default(self):
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            longsheet = 'a' * 33
+            locals().update({longsheet : Series()})
+            excel_name = self.tempexcel.name
+            ip.run_line_magic('excel', '{longsheet} -f {filepath}'.format(longsheet=longsheet, filepath=excel_name))
+            assert len(w) == 1
+            assert issubclass(w[-1].category, UserWarning)
+            assert "truncated" in str(w[-1].message)
+
     def tearDown(self):
         self.tempexcel.close()
 
@@ -138,6 +170,3 @@ def test_all_too_many_objects():
     with pytest.raises(RuntimeError):
         ip.run_line_magic('excel_all', '')
 
-
-if __name__ == '__main__':
-    unittest.main()
