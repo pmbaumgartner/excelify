@@ -132,7 +132,9 @@ def test_all_no_objects():
         ip.run_line_magic('excel_all', '')
 
 def test_all_too_many_objects():
-    objects = [Series() for _ in range(102)]
+    # this seems like a bad idea...
+    for i in range(102):
+        locals().update({'series' + str(i) : Series()})
     with pytest.raises(RuntimeError):
         ip.run_line_magic('excel_all', '')
 
