@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import os
 import excelify
 
-VERSION = 0.3
+VERSION = 0.4
 
 setup(
     name='excelify',
